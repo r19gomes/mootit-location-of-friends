@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "Qual é sua localização?";
+}
+
+<h2>Qual é a sua localização?</h2>
+
+<div class="row form-group">
+    <div class="col-md-12">
+        <label for="apelido">Usuário</label>
+        <select class="form-control">
+            <option value="1">Fernando</option>
+            <option value="2">Pedro</option>
+            <option value="3">Marcos</option>
+            <option value="4" selected>Audi</option>
+        </select>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-md-6">
+        <label for="latitude">Latitude</label>
+        <input type="number" class="form-control" id="latitude"
+               aria-describedby="apelidoHelp" placeholder="Entre a latitude" />
+    </div>
+    <div class="col-md-6">
+        <label for="longitude">Longitude</label>
+        <input type="number" class="form-control" id="longitude"
+               aria-describedby="longitudeHelp" placeholder="Entre com a longitude" />
+    </div>
+</div>
+
+<div class="row form-group">
+    <br />
+    <div class="col-md-12">
+        <button type="button" class="btn btn-primary">
+            <span class="glyphicon glyphicon-floppy-saved"></span> Salvar
+        </button>
+        <button type="button" class="btn btn-default">
+            <span class="glyphicon glyphicon-circle-arrow-left"></span> Voltar
+        </button>
+    </div>
+</div>
