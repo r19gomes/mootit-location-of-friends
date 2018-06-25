@@ -6,7 +6,7 @@ using System.Web.Http;
 
 namespace AspNetMvc.Api.Controllers
 {
-    public class UsuariosController : ApiController
+    public class EnderecosController : ApiController
     {
         private MootitRedeContext db = new MootitRedeContext();
 
@@ -16,12 +16,12 @@ namespace AspNetMvc.Api.Controllers
             if (id <= 0)
                 return BadRequest("O id deve ser um numero maior que zero.");
 
-            var usuario = db.Usuarios.Find(id);
+            var enderecos = db.Enderecos.Find(id);
 
-            if (usuario == null)
+            if (enderecos == null)
                 return NotFound(); // Erro 404
 
-            return Ok(usuario); // Sucesso 200
+            return Ok(enderecos); // Sucesso 200
         }
 
         [HttpGet]
@@ -33,7 +33,8 @@ namespace AspNetMvc.Api.Controllers
             if (tamanhoPagina > 10)
                 return BadRequest("O tamanho máximo de página permitido é 10.");
 
-            int totalPaginas = (int)Math.Ceiling(db.Usuarios.Count() / Convert.ToDecimal(tamanhoPagina));
+            int totalPaginas = (int)Math.Ceiling
+                (db.Enderecos.Count() / Convert.ToDecimal(tamanhoPagina));
 
             if (pagina > totalPaginas)
                 return BadRequest("A páginas solicitada não existe.");
@@ -48,42 +49,44 @@ namespace AspNetMvc.Api.Controllers
                 System.Web.HttpContext.Current.Response.AddHeader("X-Pagination-NextPage",
                     Url.Link("DefaultApi", new { pagina = pagina + 1, tamanhoPagina = tamanhoPagina }));
 
-            var usuarios = db.Usuarios.OrderBy(c => c.CadastroDataHora).Skip(tamanhoPagina * (pagina - 1)).Take(tamanhoPagina);
+            var enderecos = db.Enderecos
+                .OrderBy(c => c.CadastroDataHora)
+                    .Skip(tamanhoPagina * (pagina - 1)).Take(tamanhoPagina);
 
-            return Ok(usuarios);
+            return Ok(enderecos);
         }
 
         [HttpPost]
-        public IHttpActionResult Post(Usuario usuario)
+        public IHttpActionResult Post(Endereco endereco)
         {
             //  Retorna o erro 400.
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             //  Se valido, adiciona o registro.
-            db.Usuarios.Add(usuario);
+            db.Enderecos.Add(endereco);
             db.SaveChanges();
 
             //  Retorna 201
             return CreatedAtRoute("DefaultApi", new
             {
-                id = usuario.UsuarioId
-            }, usuario);
+                id = endereco.EnderecoId
+            }, endereco);
         }
 
         [HttpPut]
-        public IHttpActionResult Put(int id, Usuario usuario)
+        public IHttpActionResult Put(int id, Endereco endereco)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState); // Erro 400
 
-            if (id != usuario.UsuarioId)
+            if (id != endereco.EnderecoId)
                 return BadRequest("O id informado a URL é diferente do id informado no corpo da requisição");
 
-            if (db.Usuarios.Count(c => c.UsuarioId == id) == 0)
+            if (db.Enderecos.Count(c => c.EnderecoId== id) == 0)
                 return NotFound();
 
-            db.Entry(usuario).State = System.Data.Entity.EntityState.Modified;
+            db.Entry(endereco).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
 
             return StatusCode(HttpStatusCode.NoContent);
@@ -95,12 +98,12 @@ namespace AspNetMvc.Api.Controllers
             if (id <= 0)
                 return BadRequest("O id deve ser um número maior que zero.");
 
-            var usuario = db.Usuarios.Find(id);
+            var endereco = db.Enderecos.Find(id);
 
-            if (usuario == null)
+            if (endereco == null)
                 return NotFound();
 
-            db.Usuarios.Remove(usuario);
+            db.Enderecos.Remove(endereco);
             db.SaveChanges();
 
             return StatusCode(HttpStatusCode.NoContent);
@@ -108,3 +111,4 @@ namespace AspNetMvc.Api.Controllers
 
     }
 }
+

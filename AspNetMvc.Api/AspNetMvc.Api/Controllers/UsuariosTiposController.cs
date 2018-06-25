@@ -6,7 +6,7 @@ using System.Web.Http;
 
 namespace AspNetMvc.Api.Controllers
 {
-    public class UsuariosController : ApiController
+    public class UsuariosTiposController : ApiController
     {
         private MootitRedeContext db = new MootitRedeContext();
 
@@ -16,12 +16,12 @@ namespace AspNetMvc.Api.Controllers
             if (id <= 0)
                 return BadRequest("O id deve ser um numero maior que zero.");
 
-            var usuario = db.Usuarios.Find(id);
+            var usuarioTipo = db.UsuariosTipos.Find(id);
 
-            if (usuario == null)
+            if (usuarioTipo == null)
                 return NotFound(); // Erro 404
 
-            return Ok(usuario); // Sucesso 200
+            return Ok(usuarioTipo); // Sucesso 200
         }
 
         [HttpGet]
@@ -33,7 +33,8 @@ namespace AspNetMvc.Api.Controllers
             if (tamanhoPagina > 10)
                 return BadRequest("O tamanho máximo de página permitido é 10.");
 
-            int totalPaginas = (int)Math.Ceiling(db.Usuarios.Count() / Convert.ToDecimal(tamanhoPagina));
+            int totalPaginas = (int)Math.Ceiling
+                (db.UsuariosTipos.Count() / Convert.ToDecimal(tamanhoPagina));
 
             if (pagina > totalPaginas)
                 return BadRequest("A páginas solicitada não existe.");
@@ -48,42 +49,44 @@ namespace AspNetMvc.Api.Controllers
                 System.Web.HttpContext.Current.Response.AddHeader("X-Pagination-NextPage",
                     Url.Link("DefaultApi", new { pagina = pagina + 1, tamanhoPagina = tamanhoPagina }));
 
-            var usuarios = db.Usuarios.OrderBy(c => c.CadastroDataHora).Skip(tamanhoPagina * (pagina - 1)).Take(tamanhoPagina);
+            var usuariosTipos = db.UsuariosTipos
+                .OrderBy(c => c.CadastroDataHora)
+                    .Skip(tamanhoPagina * (pagina - 1)).Take(tamanhoPagina);
 
-            return Ok(usuarios);
+            return Ok(usuariosTipos);
         }
 
         [HttpPost]
-        public IHttpActionResult Post(Usuario usuario)
+        public IHttpActionResult Post(UsuarioTipo usuarioTipo)
         {
             //  Retorna o erro 400.
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             //  Se valido, adiciona o registro.
-            db.Usuarios.Add(usuario);
+            db.UsuariosTipos.Add(usuarioTipo);
             db.SaveChanges();
 
             //  Retorna 201
             return CreatedAtRoute("DefaultApi", new
             {
-                id = usuario.UsuarioId
-            }, usuario);
+                id = usuarioTipo.UsuarioTipoId
+            }, usuarioTipo);
         }
 
         [HttpPut]
-        public IHttpActionResult Put(int id, Usuario usuario)
+        public IHttpActionResult Put(int id, UsuarioTipo usuarioTipo)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState); // Erro 400
 
-            if (id != usuario.UsuarioId)
+            if (id != usuarioTipo.UsuarioTipoId)
                 return BadRequest("O id informado a URL é diferente do id informado no corpo da requisição");
 
-            if (db.Usuarios.Count(c => c.UsuarioId == id) == 0)
+            if (db.UsuariosTipos.Count(c => c.UsuarioTipoId == id) == 0)
                 return NotFound();
 
-            db.Entry(usuario).State = System.Data.Entity.EntityState.Modified;
+            db.Entry(usuarioTipo).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
 
             return StatusCode(HttpStatusCode.NoContent);
@@ -95,12 +98,12 @@ namespace AspNetMvc.Api.Controllers
             if (id <= 0)
                 return BadRequest("O id deve ser um número maior que zero.");
 
-            var usuario = db.Usuarios.Find(id);
+            var usuarioTipo = db.UsuariosTipos.Find(id);
 
-            if (usuario == null)
+            if (usuarioTipo == null)
                 return NotFound();
 
-            db.Usuarios.Remove(usuario);
+            db.UsuariosTipos.Remove(usuarioTipo);
             db.SaveChanges();
 
             return StatusCode(HttpStatusCode.NoContent);

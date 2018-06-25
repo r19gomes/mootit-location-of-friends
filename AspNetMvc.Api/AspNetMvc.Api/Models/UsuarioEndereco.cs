@@ -4,16 +4,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AspNetMvc.Api.Models
 {
-    [Table("UsuarioTipo")]
-    public class UsuarioTipo
+    [Table("UsuarioEndereco")]
+    public class UsuarioEndereco
     {
-        [Required(ErrorMessage = "Identificador tipo de usuário deve ser preenchido.")]
+        [Required(ErrorMessage = "Identificador tipo de endereço do usuário deve ser preenchido.")]
         [Key]
-        public int UsuarioTipoId { get; set; }
+        public int UsuarioEnderecoId { get; set; }
 
-        [Required(ErrorMessage = "Nome do tipo de usuário deve ser preenchido")]
-        [MaxLength(50, ErrorMessage = "Nome do tipo de usuário deve conter até 50 caracteres.")]
-        public string Nome { get; set; }
+        [Required(ErrorMessage ="Identificador do usuário deve ser preenchido.")]
+        public int UsuarioId { get; set; }
+
+        [Required(ErrorMessage ="Identificador do endereço deve ser preenchido.")]
+        public int EnderecoId { get; set; }
 
         [Required(ErrorMessage = "Status de ativo ou inativo deve ser preenchido.")]
         public bool FlagStatus { get; set; }
